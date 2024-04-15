@@ -1,0 +1,68 @@
+<!-- SPECIAL THANKS TO OUR KOFI SUPPORTERS
+Michael Thompson
+Rajesh
+Shudokuso_
+Zek
+-->
+<html>
+<head>
+<style>
+</style>
+<script>window.onload = () => {
+key = 0
+function recurse() {
+	text = document.createElement("p")
+	opta = document.createElement("button")
+	opta.id = "a"
+	optb = document.createElement("button")
+	optb.id = "b"
+	text.innerHTML = "You are in a dark room."
+	if(key == 0) {
+		opta.innerHTML = "Try the door."
+		opta.onclick = () => {
+			newtext = document.createElement("p")
+			newtext.innerHTML = "The door is locked!"
+			document.body.appendChild(newtext)
+			document.getElementById("a").remove()
+			document.getElementById("b").remove()
+			recurse()
+		}
+		optb.innerHTML = "Look around."
+		optb.onclick = () => {
+			key = 1
+			newtext = document.createElement("p")
+			newtext.innerHTML = "You find a key!"
+			document.body.appendChild(newtext)
+			document.getElementById("a").remove()
+			document.getElementById("b").remove()
+			recurse()
+		}
+	} else if(key == 1) {
+		opta.innerHTML = "Try the door."
+		opta.onclick = () => {
+			newtext = document.createElement("p")
+			newtext.innerHTML = "You escaped the room!"
+			document.body.appendChild(newtext)
+			document.getElementById("a").remove()
+			document.getElementById("b").remove()
+		}
+		optb.innerHTML = "Look around."
+		optb.onclick = () => {
+			newtext = document.createElement("p")
+			newtext.innerHTML = "You find nothing."
+			document.body.appendChild(newtext)
+			document.getElementById("a").remove()
+			document.getElementById("b").remove()
+			recurse()
+		}
+	}
+	document.body.appendChild(text)
+	document.body.appendChild(opta)
+	document.body.appendChild(optb)
+}
+recurse()
+}</script>
+</head>
+<body>
+</body>
+</html>
