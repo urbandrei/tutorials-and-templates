@@ -8,60 +8,76 @@ Zek
 <head>
 <style>
 </style>
-<script>window.onload = () => {
-key = 0
-function recurse() {
-	text = document.createElement("p")
-	opta = document.createElement("button")
-	opta.id = "a"
-	optb = document.createElement("button")
-	optb.id = "b"
-	text.innerHTML = "You are in a dark room."
-	if(key == 0) {
-		opta.innerHTML = "Try the door."
-		opta.onclick = () => {
-			newtext = document.createElement("p")
-			newtext.innerHTML = "The door is locked!"
-			document.body.appendChild(newtext)
-			document.getElementById("a").remove()
-			document.getElementById("b").remove()
-			recurse()
-		}
-		optb.innerHTML = "Look around."
-		optb.onclick = () => {
-			key = 1
-			newtext = document.createElement("p")
-			newtext.innerHTML = "You find a key!"
-			document.body.appendChild(newtext)
-			document.getElementById("a").remove()
-			document.getElementById("b").remove()
-			recurse()
-		}
-	} else if(key == 1) {
-		opta.innerHTML = "Try the door."
-		opta.onclick = () => {
-			newtext = document.createElement("p")
-			newtext.innerHTML = "You escaped the room!"
-			document.body.appendChild(newtext)
-			document.getElementById("a").remove()
-			document.getElementById("b").remove()
-		}
-		optb.innerHTML = "Look around."
-		optb.onclick = () => {
-			newtext = document.createElement("p")
-			newtext.innerHTML = "You find nothing."
-			document.body.appendChild(newtext)
-			document.getElementById("a").remove()
-			document.getElementById("b").remove()
-			recurse()
+<script>
+function remove(id) {
+	document.getElementById(id).remove();
+}
+
+function appendP(text) {
+	const newtext = document.createElement("p");
+	newtext.innerHTML = text;
+	document.body.appendChild(newtext);
+}
+
+function appendButton(id, text) {
+	const but = document.createElement("button");
+	but.id = id;
+	but.innerHTML = text;
+	document.body.appendChild(but);
+	return but;
+}
+
+let key = false;
+let escaped = false;
+let roomId = 1;
+const rooms = {
+	1: {
+		buttons: {
+			"Try the door.": () => {
+				if (key) {
+					appendP("You escaped the room!");
+					escaped = true;
+				} else {
+					appendP("The door is locked!");
+				}
+				return !escaped;
+			},
+			"Look around.": () => {
+				if (key) {
+					appendP("You find nothing.");
+				} else {
+					appendP("You find a key!");
+					key = true;
+				}
+				return true;
+			}
 		}
 	}
-	document.body.appendChild(text)
-	document.body.appendChild(opta)
-	document.body.appendChild(optb)
+};
+
+window.onload = () => {
+	appendP("You are in a dark room.");
+	function recurse() {
+		const room = rooms[roomId];
+		let butId = 0;
+		for (let [k, v] of Object.entries(room.buttons)) {
+			console.log(k, v);
+			let but = appendButton(butId, k);
+			butId += 1;
+			but.onclick = () => {
+				butId = 0;
+				for (let [k, v] of Object.entries(room.buttons)) {
+					remove(butId++);
+				}
+				if (v()) {
+					recurse();
+				}
+			}
+		}
+	}
+	recurse();
 }
-recurse()
-}</script>
+</script>
 </head>
 <body>
 </body>
