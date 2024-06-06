@@ -1,0 +1,17 @@
+<script>
+window.onload = () => {
+	button = document.createElement("button")
+	button.innerHTML = "click fast"
+	document.body.appendChild(button)
+
+	clicks=0
+	button.onclick = () => {
+		if(clicks==0) {
+			start = Date.now()
+		} else {
+			button.innerHTML = Math.floor(clicks*1000/(Date.now()-start)) + " cps"
+		}
+		clicks++
+	}
+}
+</script>
